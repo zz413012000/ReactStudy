@@ -1,0 +1,48 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        .head{
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            border: 1px solid #000;
+            width: auto;
+        }
+    </style>
+    <script type="text/babel">
+        class MyHead extends React.Component {
+            render() {
+                //  return React.createElement("div",{className:"head"},"Hello Component"+this.props.level);
+                return React.createElement("h1",{className:"head",style:{color:this.props.color}},"Helo Component "+this.props.level);
+                // return <h1 className="head">Hello Component {this.props.level}</h1>
+            }
+        }
+        class MyHeadList extends React.Component {
+            render() {
+                return <div>
+                    <MyHead level="1" color="red"/>
+                    <MyHead level="2" color="blue"/>
+                    <MyHead level="3" color="green"/></div>
+            }
+        }
+        window.addEventListener("load", () => {
+            let myElement = <MyHeadList />;
+            ReactDOM.render(myElement, document.body);
+        })
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

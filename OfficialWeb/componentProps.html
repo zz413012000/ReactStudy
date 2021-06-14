@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<div id="root2"></div>
+<script type="text/babel">
+// function Welcome(props) {
+//   return <h1>Hello, {props.name}</h1>;
+// }
+class Welcome extends React.Component{
+    render(){        
+        return <h1>Hello,{this.props.name}</h1>;
+    }
+}
+function WelcomeList(){
+    return (
+        <div>
+            <Welcome name="Sara"/>
+            <Welcome name="Cahal"/>
+            <Welcome name="Edite"/>
+        </div>
+    )
+}
+// class WelcomeList extends React.Component{
+//     render(){
+//         return <div>
+//                 <Welcome name="Sara"/>
+//                 <Welcome name="Cahal"/>
+//                 <Welcome name="Edite"/>   
+//             </div>
+//     }
+// }
+addEventListener("load",()=>{
+  // const element = <Welcome name="Sara" />;
+  const element=<WelcomeList/>;
+  ReactDOM.render(element, document.getElementById('root'));
+});
+</script>
+<script type="text/babel">
+function formatData(date){
+    return date.toLocaleDateString();
+}
+function Avatar(props){
+    return (
+        <img className="Avatar"
+        src={props.user.avatarUrl}
+        alt={props.user.name}
+        /> 
+    )
+}
+function UserInfo(props){
+    return (
+        <div className="UserInfo">
+            <Avatar user={props.user}/>
+            <div className="UserInfo-name">
+                    {props.user.name}
+            </div>
+        </div>
+    )
+}
+function Comment(props){
+    return (
+        <div className="Commet">
+            <UserInfo user={props.author}/>
+            <div className="Comment-text">{props.text}</div>
+            <div className="Commet-data">{formatData(props.date)}</div>
+        </div>
+    );
+}
+const comment={
+    date:new Date(),
+    text:"I hope you enjoy learning React!",
+    author:{
+        name:"Hello Kitty",
+        avatarUrl:"https://placekitten.com/g/64/64"
+    }
+}
+ReactDOM.render(
+    <Comment
+        date={comment.date}
+        text={comment.text}
+        author={comment.author}
+    />,
+    document.getElementById("root2"))
+
+</script>
+</body>
+</html>

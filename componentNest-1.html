@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script>
+        // 建立巢狀組件，使用 window.onload 來繪製
+        class MyHead extends React.Component{
+            render(){
+                return React.createElement("h"+this.props.level,null,"My Component");
+            }
+        }
+        class MyHeadList extends React.Component{
+            render(){
+                let heads=[];
+                let head;
+                for(let i=1;i<7;i++){
+                    head=React.createElement(MyHead,{level:i});
+                    heads.push(head);
+                }
+                return React.createElement("DIV",null,heads)
+            }
+        }
+        window.addEventListener("load",()=>{
+            let List=React.createElement(MyHeadList,null);
+            ReactDOM.render(List,document.body);
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

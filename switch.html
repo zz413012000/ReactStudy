@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        .switch{
+            width: 60px;height: 30px;background-color:#ddd;border-radius:15px;
+        }
+        .switch>.btn{
+            width: 30px;height: 30px;background-color:#444;border-radius:15px;
+        }
+        .switch-on{
+            background-color:#dfd;
+        }
+        .switch-on>.btn{
+            background-color: #484;margin-left:30px;
+        }
+    </style>
+    <script type="text/babel">
+    class Switch extends React.Component{
+        constructor(props){
+            super(props);
+            this.state={on:false};
+        }
+        render(){
+            let className="switch";
+            if(this.state.on){
+                className+=" switch-on"
+            }
+            return <div 
+            onClick={this.update.bind(this)} 
+            className={className}>
+                <div className="btn"></div>
+            </div>;
+        }        
+        update(){
+            this.setState((currentState)=>({on:!currentState.on}));
+        }
+    }
+    window.addEventListener("load",()=>{        
+        ReactDOM.render(<Switch/>,document.getElementById("s1"))
+        ReactDOM.render(<Switch/>,document.getElementById("s2"))
+    });
+    
+    </script>
+</head>
+<body>
+    <div id="s1"></div>
+    <hr/>
+    <div id="s2"></div>
+    <hr/>
+</body>
+</html>

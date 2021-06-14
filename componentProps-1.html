@@ -1,0 +1,27 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<!-- 載入 React -->
+<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+<script>
+    // 練習組件的屬性，使用 window onload 載入來繪製元件
+    class MyHead extends React.Component{
+        render(){
+            return React.createElement("h"+this.props.level,null,"Hello Component");
+        }
+    }
+    window.addEventListener("load",()=>{
+        let myComponent=React.createElement(MyHead,{level:3});
+        ReactDOM.render(myComponent,document.body);
+    })
+
+</script>
+</head>
+<body>
+    
+</body>
+</html>

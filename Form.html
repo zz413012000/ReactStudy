@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        class MyForm extends React.Component {
+            constructor(props){
+                super(props);
+                this.state={
+                    text:"",
+                    textarea:"",
+                    selected:"none"
+                };
+            }
+            render() {
+                return <form onSubmit={this.handleSubmit.bind(this)}>
+                    Name: <input type="text"
+                    value={this.state.text}
+                    onChange={this.handleTextChange.bind(this)}
+                    />
+                    <br/>
+                    Story <textarea
+                    value={this.state.textarea}
+                    onChange={this.handleTextareaChange.bind(this)}
+                    />
+                    <br/>
+                    Gender: <select value={this.state.selected} onChange={this.handleSelectChange.bind(this)}>
+                        <option value="none">請選擇</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                    <hr/>
+                    <input type="submit" value="Submit" />
+                </form>
+            }
+            handleSelectChange(e){
+                this.setState({selected:e.currentTarget.value})
+            }
+            handleTextareaChange(e){
+                this.setState({textarea:e.currentTarget.value})
+            }
+            handleTextChange(e){
+                // e.currentTarget 可以取得觸發事件的 HTML Element
+                this.setState({text:e.currentTarget.value});
+            }
+            handleSubmit(e) {
+                e.preventDefault();  //停止瀏覽器預設的表單處理動作
+                console.log("表單送出");  // 使用者點及 Submit 送出表單後，在此處理
+                console.log("text",this.state.text);
+                console.log("textarea",this.state.textarea);
+                console.log("select",this.state.selected);
+            }
+        }
+        window.addEventListener("load", () => {
+            let myComponent = React.createElement(MyForm, null);
+            ReactDOM.render(myComponent, document.body);
+        });
+
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    function tick(){
+        const word="<!-- react-text : 4 -->"
+        // 只有 new Date().localeTimeString() 會更新
+        const element=(
+            <div>
+                <h1>Hello,World</h1>
+                <h2>
+                    {word}
+                    It is {new Date().toLocaleTimeString()}. 
+                    {word}
+                    {word}
+                </h2>
+            </div>
+        );
+        ReactDOM.render(element,document.getElementById("root"));
+    }
+    setInterval(tick,1000);
+    </script>    
+    
+</body>
+</html>

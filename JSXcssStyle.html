@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<!-- 載入 React -->
+<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+<!--載入 Babel 編譯器套件-->
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<style>
+.head{
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius:25%;
+}
+</style>
+<script type="text/babel">
+class MyHead extends React.Component{
+    render(){
+        return <div className="head" style={{color:"red"}}>Hello world {this.props.level}</div>;
+    }
+}
+class MyHeadList extends React.Component{
+    render(){
+        return <div>
+        <MyHead level="1"/>
+        <MyHead level="2"/>
+        <MyHead level="3"/>
+         </div>
+    }
+}
+window.addEventListener("load",()=>{
+    let ele=<MyHeadList/>
+    ReactDOM.render(ele,document.body);
+});
+</script>
+</head>
+<body>
+    
+</body>
+</html>
