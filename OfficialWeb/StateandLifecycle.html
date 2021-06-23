@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// function tick() {
+//     const element = (
+//         <div>
+//             <h1>Hello, World</h1>
+//             <h2>It is {new Date().toLocaleTimeString()}.</h2>
+//         </div>
+//     );
+//     ReactDOM.render(
+//         element,
+//         document.getElementById("root")
+//     );
+// }
+// setInterval(tick,1000);
+// function Clock(props){
+//     return <div>
+//             <h1>Hello,World</h1>
+//             <h2>It is {props.date.toLocaleTimeString()}.</h2>
+//         </div>
+// }
+// function tick(){
+//     ReactDOM.render(
+//         <Clock date={new Date()}/>
+//         ,document.getElementById("root"));
+// }
+// setInterval(tick,1000);
+// class Clock extends React.Component {
+//     constructor(props){
+//         super(props);
+//         this.state={date:new Date()}; // 這裡會自動更新
+//     }
+//     componentDidMount(){ // render 之後才執行，可以用來設定 Timer
+//         console.log("componentDidMount");
+//         this.timerID=setInterval(()=>this.tick(),1000);
+//     }        
+//     componentWillUnmount(){
+//         console.log("componentWillUnMount");
+//         clearInterval(this.timerID);
+//     }
+//     tick(){
+//         this.setState({
+//             date:new Date()
+//         });
+//     }
+//     render(){ // 每次產生更新時，會自動 render
+//         console.log("render");
+//         return <div>
+//             <h1>Hello,World!</h1>
+//             <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+//             </div>
+//     }
+// }
+// ReactDOM.render(<Clock/>,document.getElementById("root"));
+function FormattedDate(props){
+    return <h2>It is{props.date.toLocaleTimeString()}.</h2>
+}
+class Clock extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={date:new Date()};
+    }
+    componentDidMount(){
+        console.log("componentDidMount");
+        this.timerID=setInterval(
+            ()=>this.tick(),
+        1000);
+    }
+    componentWillUnmount(){
+        clearInterval(this.timerID);
+    }
+    tick(){
+        this.setState({date:new Date()});
+        console.log("tick");
+    }
+    render(){
+        console.log("render");
+        return <div>
+            <h1>Hello,World</h1>
+            <FormattedDate date={this.state.date}/>
+            </div>
+    }
+}
+function App(){
+    return <div>
+        <Clock/>
+        <Clock/>
+        <Clock/>
+        </div>
+}
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>

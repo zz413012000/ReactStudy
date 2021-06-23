@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="root1"></div>
+    <form onsubmit="console.log('You clicked submit');return false">
+        <button type="submit">submit</button>
+    </form>
+    <script type="text/babel">
+    function MyForm(){
+        function handleSubmit(e){            
+            e.preventDefault();
+            console.log("You clicked submit.")
+        }
+        return <form onSubmit={handleSubmit}>
+            <button type="submit">MyForm Submit</button>
+            </form>
+    }
+    class Toggle extends React.Component{
+        constructor(props){
+            super(props);
+            this.state={isToggleOn:true};
+        }
+        handleClick(){
+            this.setState(currentState=>({isToggleOn:!currentState.isToggleOn}));
+        }
+        render(){
+            return (
+                <button onClick={this.handleClick.bind(this)}>{this.state.isToggleOn ?"ON":"OFF"}</button>
+            )
+        }
+    }
+    ReactDOM.render(<Toggle/>,document.getElementById("root"));
+    ReactDOM.render(<MyForm/>,document.getElementById("root1"));
+    </script>
+</body>
+</html>
