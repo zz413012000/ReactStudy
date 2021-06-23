@@ -8,13 +8,57 @@
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .cell{
+            /* margin-left: -2px; */
+            /* margin-top:-2px; */
+            padding: 0;
+            height: 100px;
+            border:2px solid #000;
+            width: 100px;
+            font-weight:bold;
+            font-size: 64px;
+            line-height:100px;
+            text-align:center;
+        }
+        .board{
+            display: flex;
+            flex-wrap: wrap;
+            width: 312px;
+            height: 312px;
+            margin: 10px;
+            padding: 0;
+            border:2px solid #000;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 class Cell extends React.Component{
     render(){
-        return <div className="cell">{}</div>
+        let text="";
+        if(this.props.mark===0){
+            text="O";
+        }else if(this.props.mark===1){
+            text="X";
+        }
+        return (
+            <div 
+            className="cell"
+            onClick={this.click.bind(this)}
+            >
+                {text}
+            </div>
+            );
+    }
+    click(){
+        this.props.update(this.props.index)
     }
 }
 class Board extends React.Component{
@@ -35,22 +79,44 @@ class Board extends React.Component{
     }
     render(){
         let cells=[];
-        for(let i;i<this.state.marks.length;i++){
-            cells.push(<Cell index={i} mark={this.state.marks[i]}
-            update={this.updateMark.bind(this)}/>);
+        for(let i=0;i<this.state.marks.length;i++){
+            cells.push(
+                <Cell 
+                key={i}
+                index={i} 
+                mark={this.state.marks[i]}
+                update={this.updateMark.bind(this)}
+                />);
         }
-        if(this.state.winner){
+        if(this.state.winner!==null){
             cells.push(<Line/>);
         }
         return <div className="board">{cells}</div>
     }
-    updateMark(index){}
-    checkWinner(marks){
-        /*
-            若有贏家，回傳
-            {side:贏家是圈或叉,startIndex:線條起點框框編號，endIndex:線條終點框框編號}
-        */
+    updateMark(index){
+        // alert("Click:"+index);
+        let currentMark=this.state.mark[index];
+        // /*
+        //     a. 目前標記必須是 -1，代表框框空白
+        //     b. 目前沒有贏家
+        // */
+        if(currentMark===-1 && this.state.winner===null){
+            this.setState((preState)=>{
+                let mark=preState.circle%2;
+                preState.marks[index]=mark;
+        //         return {
+        //             circle:preState.circle+1,
+        //             marks:preState.marks
+        //         }
+            });
+        }
     }
+    // checkWinner(marks){
+    //     /*
+    //         若有贏家，回傳
+    //         {side:贏家是圈或叉,startIndex:線條起點框框編號，endIndex:線條終點框框編號}
+    //     */
+    // }
 }
 window.addEventListener("load",()=>{
     ReactDOM.render(<Board/>,document.getElementById("root"));
