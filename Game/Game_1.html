@@ -16,24 +16,37 @@
         .cell{
             /* margin-left: -2px; */
             /* margin-top:-2px; */
+            display: inline-block;
+            /*消除 inline-block 的上下間距 */
+            vertical-align: middle;
+            box-sizing:border-box;
+            margin: 0;
             padding: 0;
             height: 100px;
-            border:2px solid #000;
             width: 100px;
-            font-weight:bold;
-            font-size: 64px;
+            border:1px solid #000;
+            font-size: 64px; /*跟字體有關係*/
             line-height:100px;
             text-align:center;
+            font-weight:bold;
         }
         .board{
-            display: flex;
-            flex-wrap: wrap;
-            width: 312px;
-            height: 312px;
-            margin: 10px;
+            position: relative;
+            /* display: flex; */
+            /* flex-wrap: wrap; */
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
             padding: 0;
             border:2px solid #000;
             border-radius: 5px;
+        }
+        .board>.line{
+            position: absolute;
+            top:0px;left:0px;
+            width: 300px;height: 300px;
+            /* box-sizing: border-box; */
+            /* border:5px dotted red; */
         }
     </style>
 </head>
@@ -42,6 +55,10 @@
 <script type="text/babel">
 class Line extends React.Component{
     render(){
+        let startX=this.props.startIndex%3; // 取餘數
+        let startY=Math.floor(this.props.startIndex/3); // 除 3 之後無條件捨去。
+        let endX=this.props.endIndex%3;
+        let endY=Math.floor(this.props.endIndex/3);
         return (
             <svg className="line">
                 <line x1={startX*100+50} y1={startY*100+50} x2={endX*100+50} y2={endY*100+50}
@@ -102,6 +119,7 @@ class Board extends React.Component{
         if(this.state.winner!==null){
             cells.push(
                 <Line 
+                key={"a"}
                 startIndex={this.state.winner.startIndex}
                 endIndex={this.state.winner.endIndex}
                 />
