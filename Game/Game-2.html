@@ -19,11 +19,20 @@
         ul {
             padding-left: 30px;
         }
-
+        .board{
+            position: relative;
+        }
         .board-row:after {
             clear: both;
             content: "";
             display: table;
+        }
+        .board>.line{
+            position: absolute;
+            top:0px;left:0px;
+            width: 300px;height: 300px;
+            /* box-sizing: border-box; */
+            /* border:5px dotted red; */
         }
 
         .status {
@@ -34,15 +43,16 @@
             background: #fff;
             border: 1px solid #999;
             float: left;
-            font-size: 24px;
+            font-size: 50px;
             font-weight: bold;
-            line-height: 34px;
-            height: 34px;
+            line-height: 10px;
+            height: 100px;
             margin-right: -1px;
             margin-top: -1px;
             padding: 0;
-            text-align: center;
-            width: 34px;
+            /* text-align: center; */
+            width: 100px;
+            cursor: pointer
         }
 
         .square:focus {
@@ -63,34 +73,142 @@
         }
     </style>
 </head>
-
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        class Square extends React.Component {
-            constructor(props) {
-                super(props);
-                this.state = {}
+        // class Square extends React.Component {
+        //     // constructor(props) {
+        //     //     super(props);
+        //     //     this.state = {
+        //     //         value:null
+        //     //     }
+        //     // }
+        //     render() {
+        //         return (
+        //             <button 
+        //             className="square"
+        //             onClick={()=>this.props.onClick()}
+        //             >
+        //                 {this.props.value}
+        //             </button>
+        //         )
+        //     }
+        // }
+        function Square(props){
+            return (
+                <button
+                className="square"
+                onClick={props.onClick}
+                >
+                    {props.value}
+                </button>
+            )
+        }
+        function Line(props){
+            console.log(props);
+            let startX=props.startIndex%3; // 取餘數
+            let startY=Math.floor(props.startIndex/3); // 除 3 之後無條件捨去。
+            let endX=props.endIndex%3;
+            let endY=Math.floor(props.endIndex/3);
+            return (
+            <svg className="line">
+                <line 
+                x1={startX*100+50} y1={startY*100+50} x2={endX*100+50} y2={endY*100+50}
+                // x1={50} y1 ={50} x2={250} y2={250}
+                stroke="red" strokeWidth="5"
+                />
+            </svg>
+        );
+        }
+        function calculateWinner(squares){
+            // 希望有贏家的時候就回傳 O 或者 X 的字串
+            // 沒有贏家的時候就回傳 null
+            // const lines=[
+            //     [0,1,2],
+            //     [3,4,5],
+            //     [6,7,8],
+            //     [0,3,6],
+            //     [1,4,7],
+            //     [2,5,8],
+            //     [0,4,8],
+            //     [2,4,6]
+            // ];
+            // for (let i=0;i<lines.length;i++){
+            //     const [a,b,c]=lines[i]
+            //     if(squares[a] && squares[a]===squares[b] && squares[a]===squares[c]){
+            //         return squares[a]
+            //     }
+            // }
+            // marks 陣列
+            for(let y=0;y<3;y++){
+                if(squares[y*3] && squares[y*3]===squares[y*3+1] && squares[y*3]===squares[y*3+2]){
+                    return {side:squares[y*3],startIndex:y*3,endIndex:y*3+2}
+                }
             }
-            render() {
-                return (
-                    <button className="square">
-                        {this.props.value}
-                    </button>
-                )
+            // 偵測垂直方向的三條線是否有相同的標記
+            for(let x=0;x<3;x++){
+                if(squares[x] && squares[x]===squares[x+3] && squares[x]===squares[x+6]){
+                    return {side:squares[x],startIndex:x,endIndex:x+6};
+                }
             }
+            // 偵測斜線
+            if(squares[0] && squares[0]===squares[4] && squares[0]===squares[8]){
+                return {side:squares[0],startIndex:0,endIndex:8};
+            }else if(squares[2] && squares[2]===squares[4] && squares[2]===squares[6]){
+                return {side:squares[2],startIndex:2,endIndex:6}
+            }       
+            // 目前還沒有贏家
+            return null;
         }
         class Board extends React.Component {
+            constructor(props){
+                super(props);
+                this.state={
+                    squares:Array(9).fill(null),
+                    xIsNext:true,
+                    winner:null
+                };
+            }
             renderSquare(i){
                 return (
-                    <Square value={i}/>
+                    <Square 
+                    value={this.state.squares[i]}
+                    onClick={()=>this.handleClick(i)}
+                    />
                 )
             }
+            handleClick(i){
+                const squares=this.state.squares.slice(); // 傳一個新陣列回傳
+                if(calculateWinner(squares) || squares[i]){ // 有贏家或者 squares[i] 的值不為 null 就跳出程式
+                    return;
+                }
+                squares[i]=this.state.xIsNext?"X":"O";
+                let winner=calculateWinner(squares);
+                this.setState((preState)=>{
+                    return {                        
+                        squares:squares,
+                        xIsNext:!preState.xIsNext,
+                        winner:winner
+                    }
+                });
+            }
+            renderLine(){
+                const squares=this.state.squares.slice();
+                if(calculateWinner(squares)){
+                    return (
+                        <Line 
+                        key={"a"}
+                        startIndex={this.state.winner.startIndex}
+                        endIndex={this.state.winner.endIndex}
+                        />
+                    )
+                }
+            }
             render() {
-                const status= "Next Player: X"
+                const status= "Next Player: "+(this.state.xIsNext?"X":"O");
                 return (
-                    <div>
-                        <div className="status">{status}</div>
+                    <div className="board">
+                        
                         <div className="board-row">
                             {this.renderSquare(0)}
                             {this.renderSquare(1)}
@@ -106,6 +224,8 @@
                             {this.renderSquare(7)}
                             {this.renderSquare(8)}
                         </div>
+                        {this.renderLine()}
+                        <div className="status">{status}</div>
                     </div>
                 )
             }
