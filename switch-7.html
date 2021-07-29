@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>    
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        .switch{
+            width: 60px;height: 30px;border-radius:30px;
+            background-color: #888;
+            transition:all 2s;
+        }
+        .btn{
+            width: 30px;height: 30px;border-radius:15px;
+            background-color: #ddd;
+            position: relative;
+            /* top: 0;left: 0; */ 
+        }
+        .switch-on{
+            background-color: #cdc;
+        }
+        .btn-on{
+            background-color: #484;
+            left: 30px;
+            animation: click-on 1s;
+        }
+        .btn-off{
+            animation: click-off 1s;
+        }
+        @keyframes click-on{
+            0%{left: 0;}
+            100%{left:30px}
+        }
+        @keyframes click-off{
+            0%{left:30px}
+            100%{left: 0;}
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        class Switch extends React.Component{
+            constructor(props){
+                super(props);
+                this.state={
+                    on:false,
+                    clicked:false
+                }
+            }
+            upData(){
+                this.setState({on:!this.state.on});
+                this.setState({clicked:true})
+            }
+            render(){
+                let classname="switch";
+                let btnclass="btn";
+                if(this.state.on && this.state.clicked){
+                    classname+=" switch-on";
+                    btnclass+=" btn-on"
+                }if(!this.state.on && this.state.clicked){
+                    btnclass="btn btn-off"
+                }
+                return (
+                    <div 
+                    className={classname}
+                    onClick={this.upData.bind(this)}
+                    >
+                        <div className={btnclass}></div>
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(<Switch/>,document.getElementById("root"));
+    </script>
+</body>
+</html>
