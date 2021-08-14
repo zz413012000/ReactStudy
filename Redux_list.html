@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0-beta.1/redux.min.js"></script>
+</head>
+<body>
+    <script type="text/babel">
+    class MyHead extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        render(){
+            return <li>Hello Word {this.props.level}</li>
+        }
+    }
+    class MyHeadList extends React.Component{
+        constructor(props){
+            super(props);
+            this.state={
+                max:3
+            }
+        }
+        render(){
+            let cells=[];
+            for(let i=0;i<this.state.max;i++){
+                cells.push(<MyHead level={i}/>);
+            }
+            return <ul>{cells}</ul>
+        }
+    }
+    let store;
+    let reducer=function(state,action){
+        //根據 action 的 type，來執行狀態更新的動作
+        switch(action.type){
+            case "changeMax":
+                return
+            default:
+                return state;
+        }
+    };
+    window.addEventListener("load",()=>{
+        store=Redux.createStore(reducer,{max:3});
+        ReactDOM.render(<MyHeadList/>,document.body);
+    })
+    </script>
+</body>
+</html>

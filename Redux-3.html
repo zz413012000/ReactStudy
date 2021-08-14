@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0-beta.1/redux.min.js"></script>
+</head>
+<body>
+    off
+    <script>
+        /*
+            1.建立 store
+            2.store 包含 reducer 和初始狀態物件
+            3.建立行動物件，使用 dispatch 派送給 reducer 改變狀態
+
+        */
+        let store;
+        let reducer=function(state,action){
+            switch(action.type){
+                case "UPDATA_SWITCH":
+                    return {on:!state.on};
+                default:
+                    return state;
+            }
+        }
+        let handler=function(){
+            let state=store.getState();
+            console.log(state);
+            document.body.innerHTML=state.on?"ON":"OFF";
+        }
+        window.addEventListener("load",()=>{
+            store=Redux.createStore(reducer,{on:false});
+            //註冊回應狀態改變的函式
+            let unsubscribe=store.subscribe(handler);
+            // 取消對應的、已註冊的狀態改變函式
+            unsubscribe();
+            document.addEventListener("click",()=>{ 
+                store.dispatch({
+                    type:"UPDATA_SWITCH"
+                })
+            });
+        });
+    </script>
+</body>
+</html>
