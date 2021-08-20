@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0-beta.1/redux.min.js"></script>
+    <style>
+        .switch{
+            width: 60px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 15px;
+        }
+        .switch>.btn{
+            width: 30px;height: 30px;
+            background-color: rgb(179, 179, 179);
+            border-radius:15px;
+        }
+        .switch-on{
+            background-color: #dfd;
+        }
+        .switch-on>.btn{
+            background-color: #484;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/babel">
+        class Button extends React.Component{
+            render(){
+                return <div className="btn"></div>
+            }
+        }
+        class Switch extends React.Component{
+            constructor(props){
+                super(props);
+                this.state=store.getState();
+            }
+            update(){
+                store.dispatch({
+                    type:"ChangeSwitch"
+                });
+            }
+            render(){
+                return (
+                <div 
+                className={"switch"+(this.state.on?" switch-on":"")}
+                onClick={this.update.bind(this)}
+                >
+                    <Button/>
+                </div>
+                )
+            }
+            refresh(){
+                this.setState(store.getState);
+                console.log(store.getState());
+            }
+            componentDidMount(){
+                this.unsubscribe=store.subscribe(this.refresh.bind(this));
+            }
+            componentWillUnmount(){
+                this.unsubscribe();
+            }
+        }
+        let store;
+        let reducer=function(state,action){
+            switch(action.type){
+                case "ChangeSwitch":
+                    return {on:!state.on,times:count1()}
+                default: 
+                    return state;
+            }
+        }
+        // 用閉包寫一個計數器
+        function counter(){
+            let click=0;
+            return function(num){
+                if(num){
+                    click=click+num;
+                }
+                // click++;
+                return click;
+            }            
+        }
+        let count1=counter();
+        console.log(counter());
+        console.log(count1);
+        console.log(count1());
+        console.log(count1(10));
+        console.log(count1(10));
+        window.addEventListener("load",()=>{
+            store=Redux.createStore(reducer,{on:false,times:0})
+            ReactDOM.render(<Switch/>,document.body);
+        });
+    </script>
+</body>
+</html>

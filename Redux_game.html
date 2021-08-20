@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0-beta.1/redux.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .cell{
+            /* margin-left: -2px; */
+            /* margin-top:-2px; */
+            display: inline-block;
+            /*消除 inline-block 的上下間距 */
+            vertical-align: middle;
+            box-sizing:border-box;
+            margin: 0;
+            padding: 0;
+            height: 100px;
+            width: 100px;
+            border:1px solid #000;
+            font-size: 64px; /*跟字體有關係*/
+            line-height:100px;
+            text-align:center;
+            font-weight:bold;
+        }
+        .board{
+            position: relative;
+            /* display: flex; */
+            /* flex-wrap: wrap; */
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            padding: 0;
+            border:2px solid #000;
+            border-radius: 5px;
+        }
+        .board>.line{
+            position: absolute;
+            top:0px;left:0px;
+            width: 300px;height: 300px;
+            /* box-sizing: border-box; */
+            /* border:5px dotted red; */
+        }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+class Line extends React.Component{
+    render(){
+        let startX=this.props.startIndex%3; // 取餘數
+        let startY=Math.floor(this.props.startIndex/3); // 除 3 之後無條件捨去。
+        let endX=this.props.endIndex%3;
+        let endY=Math.floor(this.props.endIndex/3);
+        return (
+            <svg className="line">
+                <line x1={startX*100+50} y1={startY*100+50} x2={endX*100+50} y2={endY*100+50}
+                stroke="red" strokeWidth="5"
+                />
+            </svg>
+        );
+    }
+}
+class Cell extends React.Component{
+    render(){
+        let text="";
+        if(this.props.mark===0){
+            text="O";
+        }else if(this.props.mark===1){
+            text="X";
+        }
+        return (
+            <div 
+            className="cell"
+            onClick={this.click.bind(this)}
+            >
+                {text}
+            </div>
+            );
+    }
+    click(){
+        this.props.update(this.props.index)
+    }
+}
+class Board extends React.Component{
+    constructor(props){
+        super(props);
+        /*
+            框框在 marks 中的編號 (index)
+            0 1 2
+            3 4 5
+            6 7 8
+        */
+        // 應用程式的狀態
+        this.state={
+            circle:0,
+            marks:[-1,-1,-1,-1,-1,-1,-1,-1,-1], // 框框標記 : -1 無, 0: 圈, 1: 叉
+            winner:null //贏家的資訊
+        };
+    }
+    render(){
+        let cells=[];
+        for(let i=0;i<this.state.marks.length;i++){
+            cells.push(
+                <Cell 
+                key={i}
+                index={i} 
+                mark={this.state.marks[i]}
+                update={this.updateMark.bind(this)}
+                />);
+        }
+        if(this.state.winner!==null){
+            cells.push(
+                <Line 
+                key={"a"}
+                startIndex={this.state.winner.startIndex}
+                endIndex={this.state.winner.endIndex}
+                />
+            );
+        }
+        return <div className="board">{cells}</div>
+    }
+    updateMark(index){
+        // alert("Click:"+index);
+        let currentMark=this.state.marks[index];
+        // /*
+        //     a. 目前標記必須是 -1，代表框框空白
+        //     b. 目前沒有贏家
+        // */
+        if(currentMark===-1 && this.state.winner===null){
+            this.setState((preState)=>{
+                let mark=preState.circle%2;
+                preState.marks[index]=mark;
+                let winner=this.checkWinner(preState.marks);
+                return {
+                    circle:preState.circle+1,
+                    marks:preState.marks,
+                    winner:winner
+                };
+            });
+        }
+    }
+    checkWinner(marks){
+        /*
+            若有贏家，回傳
+            {side:贏家是圈或叉,startIndex:線條起點框框編號，endIndex:線條終點框框編號}
+        */
+        /*
+            框框在 marks 中的編號 (index)
+            0 1 2
+            3 4 5
+            6 7 8
+        */
+        // 偵測水平方向的三條線是否有相同的標記
+       let index;
+       for(let y=0;y<3;y++){
+           if(marks[y*3]!==-1 && marks[y*3]===marks[y*3+1] && marks[y*3]===marks[y*3+2]){
+               return {side:marks[y*3],startIndex:y*3,endIndex:y*3+2}
+           }
+       }
+       // 偵測垂直方向的三條線是否有相同的標記
+       for(let x=0;x<3;x++){
+           if(marks[x]!==-1 && marks[x]===marks[x+3] && marks[x]===marks[x+6]){
+               return {side:marks[x],startIndex:x,endIndex:x+6};
+           }
+       }
+       // 偵測斜線
+        if(marks[0]!==-1 && marks[0]===marks[4] && marks[0]===marks[8]){
+            return {side:marks[0],startIndex:0,endIndex:8};
+        }else if(marks[2]!==-1 && marks[2]===marks[4] && marks[2]===marks[6]){
+            return {side:marks[2],startIndex:2,endIndex:6}
+        }
+        // 目前還沒有贏家
+        return null;
+    }
+}
+// 以下是 Redux 相關程式
+let redux={
+    store:null,
+    reducer:function(state,action){
+        switch(action.type){
+
+            default:
+                return state;
+        }
+    }
+}
+window.addEventListener("load",()=>{
+    // 初始化 Redux 儲存空間
+    redux.store=Redux.createStore(redux.reducer,{
+            circle:0,
+            marks:[-1,-1,-1,-1,-1,-1,-1,-1,-1], // 框框標記 : -1 無, 0: 圈, 1: 叉
+            winner:null //贏家的資訊
+        });
+    ReactDOM.render(<Board/>,document.getElementById("root"));
+});
+</script>
+</body>
+</html>

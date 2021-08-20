@@ -24,24 +24,49 @@
     class MyHeadList extends React.Component{
         constructor(props){
             super(props);
-            this.state={
-                max:3
-            }
+            this.state=store.getState();
         }
         render(){
             let cells=[];
             for(let i=0;i<this.state.max;i++){
                 cells.push(<MyHead level={i}/>);
             }
-            return <ul>{cells}</ul>
+            return <ul onClick={this.update.bind(this)}>{cells}</ul>
+        }
+        update(){
+            // dispatch 會觸發 reducer
+            store.dispatch({
+                type:"ChangeMax",
+                max:times
+            });            
+            console.log("times",times);
+            console.log(store.getState());
+        }
+        // 以下程式用來連接 React 和 Redux
+        refresh(){
+            // 串接Redux 的狀態改變，並且觸發 React 組件的更新
+            this.setState(store.getState());
+            console.log("觸發 subscribe 方法");
+        }
+        componentDidMount(){
+            // dispatch 觸發 reducer ，reducer 一定會替代原本的狀態
+            //當 Redux 的狀態有所變化時候，subscribe 會通知/呼叫 refresh 方法
+            // store.subscribe() 會回傳一個取消註冊的方法
+            this.unsubscribe=store.subscribe(this.refresh.bind(this));
+        }
+        componentWilUnmount(){// 當一個 Component 被從 DOM 移除時，這個方法將會被呼叫
+            // 清除連結點
+            this.unsubscribe();
         }
     }
     let store;
+    let times=3;
     let reducer=function(state,action){
         //根據 action 的 type，來執行狀態更新的動作
         switch(action.type){
-            case "changeMax":
-                return
+            case "ChangeMax":
+                return {max:action.max}
+                // return state;
             default:
                 return state;
         }
@@ -49,6 +74,9 @@
     window.addEventListener("load",()=>{
         store=Redux.createStore(reducer,{max:3});
         ReactDOM.render(<MyHeadList/>,document.body);
+    })
+    document.body.addEventListener("click",()=>{
+        times++;
     })
     </script>
 </body>
