@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <form onsubmit="console.log('click');return false">
+        <button type="submit" id="btn">Submit</button>
+    </form>
+    <div id="root"></div>
+    <script>
+        let btn=document.getElementById("btn");
+        btn.addEventListener("mouseover",function(){
+            this.style.backgroundColor="#000";
+        });
+    </script>
+    <script type="text/babel">
+    function Form(){
+        const handleSubmit=(e)=>{
+            e.preventDefault();
+            console.log("Click React");
+        }
+        return (
+            <form onSubmit={handleSubmit}>
+                <button type="submit">React Submit</button>
+            </form>
+        );
+    }
+    class Btn extends React.Component{
+        change(str){
+            console.log("click "+str);
+        }
+        render(){
+            return (
+                <button onClick={this.change.bind(this,"button")}>btn</button>
+                // <button onClick={()=>this.change()}>btn</button>
+            )
+        }
+    }
+    
+    // ReactDOM.render(<Form/>,document.getElementById("root"));
+    ReactDOM.render(<Btn/>,document.getElementById("root"));
+    </script>
+</body>
+</html>

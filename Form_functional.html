@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="root2"></div>
+    <script type="text/babel">
+    // class Form extends React.Component{
+    //     constructor(props){
+    //         super(props);
+    //         this.state={
+    //             name:"預設姓名",
+    //             introduction:"",
+    //             gender:"M"
+    //         };
+    //     }
+    //     changeState(e){
+    //         //抓目前發生改變的組件 name
+    //         let changeName=e.target.name;
+    //         // 再把他目前的value 拿去更改 state
+    //         this.setState({[changeName]:e.target.value})
+    //     }
+    //     submitForm(e){
+    //         console.log(`現在輸入的名字是：${this.state.name}`);
+    //         console.log(`現在選擇的性別是:${(this.state.gender=="M"?"男":"女")}`);
+    //         console.log(`現在輸入的介紹內容是:${this.state.introduction}`);
+    //         console.log(this.state);
+    //         e.preventDefault();
+    //     }
+    //     render(){
+    //         return (
+    //             <form onSubmit={this.submitForm.bind(this)}>
+    //                 <div>
+    //                     <label>姓名：</label>
+    //                     <input id="name" name="name" 
+    //                     value={this.state.name}
+    //                     onChange={this.changeState.bind(this)}/>
+    //                 </div>
+    //                 <br/>
+    //                 {/*需注意的是，textarea和select也適用value屬性綁定*/}
+    //                 <div>
+    //                     <label>性別：</label>    
+    //                     <select type="text" id="gender" name="gender"
+    //                     value={this.state.gender}
+    //                     onChange={this.changeState.bind(this)}
+    //                     >
+    //                         <option value="M">男</option>
+    //                         <option value="W">女</option>
+    //                     </select>
+    //                 </div>
+    //                 <div>
+    //                     <label>自我介紹</label>
+    //                     <br/>
+    //                     <textarea id="introduction" name="introduction"
+    //                     value={this.state.introduction}
+    //                     onChange={this.changeState.bind(this)}
+    //                     />
+    //                 </div>
+    //                 <button type="submit">送出</button>
+    //             </form>
+    //         );
+    //     }
+    // }
+    // 取出 useState方法
+    const {useState}=React;
+    function MyForm(){
+        const [name,setName]=useState("預設");
+        const [gender,setGender]=useState("M");
+        const [introduction,setIntroduction]=useState(" ");
+        const changeState=(e)=>{
+            switch(e.target.name){
+                case "name":
+                    setName(e.target.value);
+                    break;
+                case "gender":
+                    setGender(e.target.value);
+                    break;
+                case "introduction":
+                    setIntroduction(e.target.value);
+                    break;
+                }
+            console.log(e.target.name);
+        };
+        const submitForm=(e)=>{
+            e.preventDefault();
+            console.log(`現在的姓名是:${name}`);
+            console.log(`現在的性別是:${gender}`);
+            console.log(`現在輸入的介紹內容是:${introduction}`);
+        }
+        return (
+            <form onSubmit={submitForm}>
+                <div>
+                    <label>姓名:</label>
+                    <input id="name" name="name"
+                    value={name}
+                    onChange={changeState}
+                    />
+                </div>
+                <div>
+                    <label>性別:</label>
+                    <select id="gender" name="gender"
+                    value={gender}
+                    onChange={changeState}
+                    >
+                        <option value="M">男</option>
+                        <option value="W">女</option>
+                    </select>
+                </div>
+                <div>
+                    <label>自我介紹:</label>
+                    <br/>
+                    <textarea id="introduction" name="introduction"
+                    value={introduction}
+                    onChange={changeState}/>
+                </div>
+                <button type="submit">送出</button>
+            </form>
+        );
+    }
+    // ReactDOM.render(<Form/>,document.getElementById("root"));
+    ReactDOM.render(<MyForm/>,document.getElementById("root2"));
+    </script>
+</body>
+</html>
