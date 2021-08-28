@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="root2"></div>
+    <div id="root3"></div>
+    <div id="root4"></div>
+    <script type="text/babel">
+        const {useState}=React;
+        class Form extends React.Component{
+            constructor(props){
+                super(props);
+                this.state={
+                    name:"預設",
+                    gender:"M",
+                    introduction:""
+                }
+            }
+            changeState(e){
+                let changeName=e.target.name;
+                this.setState({[changeName]:e.target.value});
+            }
+            submitForm(e){
+                e.preventDefault();
+                console.log(`姓名為：${this.state.name}`);
+                console.log(`性別為：${(this.state.gender=="M")?"男":"女"}`);
+                console.log(`自我介紹：${this.state.introduction}`);
+            }
+            render(){
+                return (
+                    <form onSubmit={this.submitForm.bind(this)}>
+                        <div>
+                            <label>姓名:</label>
+                            <input id="name" name="name" 
+                            onChange={this.changeState.bind(this)}
+                            value={this.state.name}/>
+                        </div>
+                        <div>
+                            <label>性別：</label>
+                            <select id="gender" name="gender" 
+                            value={this.state.gender}
+                            onChange={this.changeState.bind(this)}>
+                                <option value="M">男</option>
+                                <option value="W">女</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>自我介紹：</label>
+                            <textarea id="introduction" name="introduction"
+                            value={this.state.introduction}
+                            onChange={this.changeState.bind(this)}/>
+                        </div>
+                        <br/>
+                        <input type="submit" value="提交"/>
+                    </form>
+                );
+            }
+        }
+        function MyForm(){
+            const [name,setName]=useState("");
+            const [gender,setGender]=useState("M");
+            const [introduction,setIntroduction]=useState("");
+            const submitForm=(e)=>{
+                e.preventDefault();
+                console.log(`姓名為：${name}`);
+                console.log(`性別為：${gender}`);
+                console.log(`自我介紹為：${introduction}`);
+            }
+            const changeState=(e)=>{
+                // console.log(e.target);
+                let value=e.target.value;
+                // let changeName="set"+e.target.name[0].toUpperCase()+e.target.name.slice(1);
+                // console.log(changeName);
+                switch(e.target.name){
+                    case "name":
+                        setName(value);
+                        break;
+                    case "gender":
+                        setGender(value)
+                        break;
+                    case "introduction":
+                        setIntroduction(value);
+                        break;
+                }
+            }
+            return (
+                <form onSubmit={submitForm}>
+                    <div>
+                        <label>姓名：</label>
+                        <input id="name" name="name"
+                        value={name}
+                        onChange={changeState}/>
+                    </div>
+                    <div>
+                        <label>性別：</label>
+                        <select id="gender" name="gender" 
+                        onChange={changeState}
+                        value={gender}>
+                            <option value="M">男</option>
+                            <option value="W">女</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>自我介紹：</label>
+                        <textarea id="introduction" name="introduction"
+                        value={introduction}
+                        onChange={changeState}
+                        />
+                    </div>
+                    <br/>
+                    <input type="submit" value="提交"/>
+                </form>
+            );
+        }
+        class EasyForm extends React.Component{
+            constructor(props){
+                super(props);
+                this.state={
+                    lists:[
+                        {id:'01',listName:"寫文章",check:false},
+                        {id:'02',listName:"打程式",check:false},
+                        {id:'03',listName:"發呆",check:true},
+                    ]
+                }
+            }
+            changeState(index){
+                let arrLists=JSON.parse(JSON.stringify(this.state.lists));
+                arrLists[index].check=!arrLists[index].check;
+                this.setState({lists:arrLists});
+            }
+            submitForm(e){
+                e.preventDefault();
+                let status="目前做了:"
+                this.state.lists.map((list)=>{
+                    (list.check) ? status +=` ${list.listName}` : ""
+                });
+                console.log(status);
+            }
+            render(){
+                return (
+                    <form onSubmit={this.submitForm.bind(this)}>
+                        <div>
+                            <label>每天待辦清單：</label>
+                            {this.state.lists.map((list,index)=>{
+                                return (
+                                    <div>
+                                        <input type="checkbox"
+                                        checked={list.check}
+                                        onChange={this.changeState.bind(this,index)}
+                                        key={list.id}
+                                        />
+                                        <label>{list.listName}</label>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        <input type="submit" value="送出表單" />
+                    </form>
+                );
+            }
+        }
+        function MyEasyForm(){
+            const [lists,setList]=useState([
+                {id:'01',listName:"打程式",check:false},
+                {id:'02',listName:"寫文章",check:false},
+                {id:'03',listName:"發呆",check:false},
+            ]);
+            const changeState=(e)=>{
+                let arrList=JSON.parse(JSON.stringify(lists));
+                arrList[e.target.id].check=!arrList[e.target.id].check;
+                setList(arrList);
+            }
+            const submitForm=(e)=>{
+                e.preventDefault();
+                let status="目前做了：";
+                lists.map((list)=>{
+                    (list.check)? status+=` ${list.listName}`:""
+                })
+                console.log(status);
+            }
+            return (
+                <form onSubmit={submitForm}>
+                    <label>每天待辦清單：</label>
+                    {lists.map((list,index)=>{
+                        return (
+                            <div>
+                                <input type="checkbox"
+                                check={list.check}
+                                onChange={changeState}
+                                id={index}
+                                key={list.id}
+                                />
+                                <label>{list.listName}</label>
+                            </div>
+                        );
+                    })}
+                    <br/>
+                    <input type="submit"/>
+                </form>
+            );
+        }
+        // ReactDOM.render(<Form/>,document.getElementById("root"));
+        // ReactDOM.render(<MyForm/>,document.getElementById("root2"));
+        // ReactDOM.render(<EasyForm/>,document.getElementById("root3"));
+        ReactDOM.render(<MyEasyForm/>,document.getElementById("root4"));
+    </script>
+</body>
+</html>

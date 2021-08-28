@@ -13,6 +13,8 @@
 <body>
     <div id="root"></div>
     <div id="root2"></div>
+    <div id="root3"></div>
+    <div id="root4"></div>
     <script type="text/babel">
     // class Form extends React.Component{
     //     constructor(props){
@@ -126,8 +128,107 @@
             </form>
         );
     }
+    class EasyForm extends React.Component{
+        constructor(props){
+            super(props);
+            this.submitForm=this.submitForm.bind(this);
+            // this.changeState=this.changeState.bind(this);
+            this.state={
+                lists:[
+                    {id:"01",listName:"寫文章",check:false},
+                    {id:"02",listName:"打程式",check:false},
+                    {id:"03",listName:"耍廢",check:true},
+                ]
+            }
+        }
+        changeState(index){
+            let arrLists=this.state.lists;
+            // if(arrLists[index].check){
+            //     arrLists[index].check=false;
+            // }else{
+            //     arrLists[index].check=true;
+            // }
+            arrLists[index].check=!arrLists[index].check;
+            this.setState({lists:arrLists});
+        }
+        submitForm(e){
+            e.preventDefault();
+            let status="目前做了：";
+            this.state.lists.map((list)=>{
+                (list.check)?status+=` ${list.listName}`:""
+            });
+            console.log(status);
+        }
+        render(){
+            let lists=this.state.lists.map((list,index)=>(
+                <div key={list.id}>
+                    <input type="checkbox" checked={list.check} 
+                    onChange={this.changeState.bind(this,index)}
+                    key={list.id}
+                    />
+                    <label>{list.listName}</label>
+                </div>
+            ));
+            return (
+                <form onSubmit={this.submitForm}>
+                    <div>
+                        <label>每日代辦清單：</label>
+                        {lists}
+                    </div>
+                    <input type="submit" value="送出表單"/>
+                </form>
+            );
+        }
+    }
+    function MyEasyForm(){
+        const [lists,setList]=useState([
+            {id:"01",listName:"寫文章",check:false},
+            {id:"02",listName:"打程式",check:false},
+            {id:"03",listName:"耍廢",check:true},
+            {id:"04",listName:"吸鸚鵡",check:true},
+        ]);
+        const changeState=(e)=>{
+            console.log("target",e.target.id);
+            console.log("lists拷貝前",lists);
+            let index=e.target.id;
+            // let arrLists=JSON.parse(JSON.stringify(lists));//深拷貝之後建立新陣列去替代
+            let arrLists=JSON.parse(JSON.stringify(lists));
+            arrLists[index].check=!arrLists[index].check;
+            console.log("lists拷貝後",lists);
+            console.log("arrLists",arrLists);
+            setList(arrLists);//使用新的物件去替代
+        }
+        const submitForm=(e)=>{
+            e.preventDefault();
+            let status="目前做了:";
+            lists.map((list,index)=>{
+                (list.check)?status+=` ${list.listName}`:"";
+            });
+            console.log(status);
+        }
+        return (
+            <form onSubmit={submitForm}>
+                <div>
+                    <label>每日待辦清單:</label>
+                    {lists.map((list,index)=>(
+                        <div key={list.id}>
+                            <input type="checkbox" checked={list.check}
+                            onChange={changeState}
+                            id={index}
+                            key={list.id}
+                            />
+                            <label>{list.listName}</label>
+                        </div>
+                    ))}
+                </div>
+                <input type="submit" value="送出表單"/>
+            </form>
+        );
+    }
     // ReactDOM.render(<Form/>,document.getElementById("root"));
-    ReactDOM.render(<MyForm/>,document.getElementById("root2"));
+    // ReactDOM.render(<MyForm/>,document.getElementById("root2"));
+    // ReactDOM.render(<EasyForm/>,document.getElementById("root3"));
+    ReactDOM.render(<MyEasyForm/>,document.getElementById("root4"));
     </script>
 </body>
 </html>
