@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    const {useState}=React;
+    let data=[
+        {id:"1",name:"至至",message:"Morning!"},
+        {id:"2",name:"小鴨",message:"Good Morning!"},
+        {id:"3",name:"小雞",message:"Hello"},
+        {id:"4",name:"至至",message:"Hello Guys,How are you."},
+        {id:"5",name:"小雞",message:"Pretty good."},
+    ];
+    function Message(props){
+        return (
+            <div style={{marginBottom:20}}>
+                <div>{props.name}對大家說：</div>
+                <div style={{marginLeft:20}}>{props.message}</div>
+            </div>
+        );
+    }
+    function MessageBlock(props){
+        return (
+            <div>
+                {props.messageData.map((item)=>{
+                    console.log("name",item.name);
+                    console.log("searchName",props.searchName);
+                    console.log(item.name.indexOf(""));
+                    if(item.name.indexOf(props.searchName)!=-1){
+                        return <Message 
+                        key={item.id} name={item.name} message={item.message}/>
+                    }
+                })}
+            </div>
+        );
+    }
+    function SearchBlock(props){
+        console.log(props);
+        return (
+            <div>
+                <span>搜尋留言人:</span>
+                <input type="text" 
+                value={props.searchName}
+                onChange={props.changeState}/>
+            </div>
+        );
+    }
+    function MessageForm(props){
+        const [name,setName]=useState("");
+        const changeState=(e)=>{
+            setName(e.target.value);
+        }
+        return (
+            <div>
+                <SearchBlock searchName={name} changeState={changeState}/>
+                <hr/>
+                <MessageBlock messageData={props.messageData}
+                searchName={name}
+                />
+            </div>
+        );
+    }
+    ReactDOM.render(<MessageForm messageData={data}/>,document.getElementById("root"))
+    </script>
+</body>
+</html>

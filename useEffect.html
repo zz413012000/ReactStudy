@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!--載入 Babel 編譯器套件-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    const {useState,useEffect} = React;
+    function Counter (){   
+        useEffect(()=>{
+            console.log("Component Render 後執行");
+            return ()=>{
+                console.log("Component 移除後");
+            }
+        },[])
+        const [count,setCount]=useState(0);
+        // useEffect() 第2個參數放空陣列，就只會執行一次  render 後執行一次
+        // useEffect(()=>{
+        //     console.log("render 後執行")
+        // },[]);
+        // 第 2 個參數放 [state 名稱]，state 更新後會呼叫一次 useEffct        
+        useEffect(()=>{
+            console.log(`state 改變成 ${count}`) //  state 更新後執行，傳更新後的state
+            return ()=>{
+                console.log(`state 改變前 ${count}`) // state 更新後執行，傳更新前的state 
+            }
+        },[count]);
+     
+        return (
+            <div>
+                <h1>{count}</h1>
+                <button type="button" onClick={()=>setCount(count+1)}>
+                點我 +1
+                </button>
+            </div>
+        )
+    }
+    function App(){
+        const [hiddenCounter,setHiddenCounter]=useState(false);
+        return (
+            <div>
+                <button type="button" onClick={()=>{setHiddenCounter(!hiddenCounter)}}>
+                    開啟、關閉計數器
+                </button>
+                {hiddenCounter?null:<Counter/>}
+            </div>
+        )
+    }
+    ReactDOM.render(<App/>,document.getElementById("root"));
+    </script>
+</body>
+</html>
