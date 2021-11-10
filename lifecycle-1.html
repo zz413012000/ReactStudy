@@ -10,32 +10,43 @@
     <script>
         class MyHead extends React.Component{
             render(){
-                return React.createElement("h"+this.props.level,null,"Hello Component");
+                return React.createElement("h"+this.props.levels,null,"Hello Component");
             }
         }
         class MyHeadList extends React.Component{
             constructor(props){
                 super(props);
-                this.state={maxLevel:6};
+                this.state={maxLevel:props.start};
             }
             componentWillMount(){ // 組件要繪製前的時刻
-                window.setInterval(()=>{
+                this.intervalId=window.setInterval(()=>{
                     // 每秒鐘執行這裡的邏輯
-                    this.setState();
+                    this.setState((currentState,currentProps)=>{
+                        if(currentState.maxLevel>currentProps.end){
+                            return currentState; 
+                        }else{
+                            return {maxLevel:currentState.maxLevel+1};
+                        }
+                    });
                 },1000);
             }
+            componentWillUnMount(){
+                window.clearInterval(this.intervalId);
+            }
             render(){
+                console.log(this.props);
+                console.log(this.state);
                 let heads=[];
                 let head;
                 for(let i=1;i<this.state.maxLevel;i++){
-                    head=React.createElement(MyHead,{level:i})
+                    head=React.createElement(MyHead,{levels:i})
                     heads.push(head);
                 }
                 return React.createElement("div",null,heads)
             }
         }
         window.addEventListener("load",()=>{
-            let list=React.createElement(MyHeadList,null);
+            let list=React.createElement(MyHeadList,{start:1,end:5});
             ReactDOM.render(list,document.body)
         });
     </script>
